@@ -1,0 +1,44 @@
+import PySimpleGUI as sg
+import mysql.connector
+
+mydb = mysql.connector.connect(
+  host="sql10.freesqldatabase.com",
+  user="sql10484905",
+  password="wWfVgv5TdZ",
+  database="sql10484905"
+)
+
+mycursor = mydb.cursor()
+
+
+class TelaPython:
+    def __init__(self):
+        layout = [
+            [sg.Text("Bem Vindo!, Informe os dados do produto")],
+            [sg.Text("Produto:", size=(6, 0)), sg.Input(size=(15, 0), key="produto")],
+            [sg.Text("Código:", size=(6, 0)), sg.Input(size=(15, 0), key="codigo")],
+            [sg.Text("Grupo:", size=(6, 0)), sg.Input(size=(15, 0), key="grupo")],
+            [sg.Text("SubGrupo:", size=(8, 0)), sg.Input(size=(15, 0), key="subgrupo")],
+
+            [sg.Button("Enviar",)],
+          ]
+
+
+        self.janela = sg.Window("Coletando Dados").layout(layout)
+
+    def Iniciar(self):
+      while True:
+        self.button, self.values = self.janela.read()
+        produto = self.values["produto"]
+        codigo = self.values["codigo"]
+        grupo = self.values["grupo"]
+        subgrupo = self.values["subgrupo"]
+        print(f"Produto: {produto}")
+        print(f"Cógigo: {codigo}")
+        print(f"Grupo: {grupo}")
+        print(f"subgrupo: {subgrupo}")
+        mycursor.execute(f'INSERT INTO Itens (Produto, Código, Grupo, SubGrupo) VALUES ("{produto}", {codigo}, "{grupo}", "{subgrupo}")')
+        mydb.commit()
+
+tela = TelaPython()
+tela.Iniciar()
